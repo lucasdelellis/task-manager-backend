@@ -3,6 +3,8 @@ package com.lucazz82.task.controllers;
 import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,27 +25,27 @@ public class TaskController {
 	
 	
 	@GetMapping()
-	public ArrayList<TaskModel> getTasks() {
-		return _taskService.getTasks();
+	public ResponseEntity<ArrayList<TaskModel>> getTasks() {
+		return new ResponseEntity<>(_taskService.getTasks(), HttpStatus.OK);
 	}
 	
 	@GetMapping(path = "/{id}")
-	public TaskModel getTask(@PathVariable("id") Long id) {
-		return _taskService.getTask(id);
+	public ResponseEntity<TaskModel> getTask(@PathVariable("id") Long id) {
+		return new ResponseEntity<>(_taskService.getTask(id), HttpStatus.OK);
 	}
 	
 	@PostMapping()
-	public TaskModel newTask(@RequestBody TaskModel task) {
-		return _taskService.newTask(task);
+	public ResponseEntity<TaskModel> newTask(@RequestBody TaskModel task) {
+		return new ResponseEntity<>(_taskService.newTask(task), HttpStatus.CREATED);
 	}
 	
 	@DeleteMapping(path = "/{id}")
-	public TaskModel deleteTask(@PathVariable Long id) {
-		return _taskService.deleteTask(id);
+	public ResponseEntity<TaskModel> deleteTask(@PathVariable Long id) {
+		return new ResponseEntity<>(_taskService.deleteTask(id), HttpStatus.OK);
 	}
 	
 	@PutMapping(path = "/{id}")
-	public TaskModel editTask(@PathVariable Long id, @RequestBody TaskModel task) {
-		return _taskService.editTask(id, task);
+	public ResponseEntity<TaskModel> editTask(@PathVariable Long id, @RequestBody TaskModel task) {
+		return new ResponseEntity<>(_taskService.editTask(id, task), HttpStatus.OK);
 	}
 }
