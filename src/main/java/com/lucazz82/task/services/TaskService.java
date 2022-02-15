@@ -19,28 +19,40 @@ public class TaskService {
 	TaskRepository _taskRepository;
 	
 	public ArrayList<TaskModel> getTasks() {
-		return _taskRepository.findAll();
+		try {
+			return _taskRepository.findAll();			
+		} catch (Exception e) {
+			throw new ServerErrorException("Internal Server Error");
+		}
 	}
 	
 	// Next step is return error when isPresent is false. Get method throws an exception when fails.
 	public TaskModel getTask(Long id) {
-		TaskModel task = null;
 		try {
-			task = _taskRepository.findById(id).get();
-		} catch (NoSuchElementException e) {
-			throw new NotFoundException("Task not found");
+			TaskModel task = _taskRepository.findById(id);
+			
+			if(task != null) {
+				return task;				
+			} else {
+				throw new NotFoundException("Task not found");
+			}
+			
+		} catch (NotFoundException e) {
+			throw e;
 		} catch (Exception e) {
 			throw new ServerErrorException("Internal Server Error");
 		}
 		
-		return task;
 	}
 	
 	public TaskModel newTask(TaskModel task) {
-		if(task.getContent() == null || task.getContent().isBlank())
-			throw new BadRequestException("Task has missing fields");
-		
-		_taskRepository.save(task);
+//		if(task.getContent() == null || task.getContent().isBlank())
+//			throw new BadRequestException("Task has missing fields");
+		try {
+			_taskRepository.save(task);			
+		} catch (Exception e) {
+			throw e;
+		}
 		return task;
 	}
 	

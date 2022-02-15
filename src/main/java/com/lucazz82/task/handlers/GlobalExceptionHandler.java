@@ -17,7 +17,7 @@ public class GlobalExceptionHandler {
 	}
 	
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
-	@ExceptionHandler(BadRequestException.class)
+	@ExceptionHandler(BadRequestException.class, MethodArgumentNotValidException.class)
 	@ResponseBody
 	public ErrorMessage badRequest(BadRequestException exception) {
 		return new ErrorMessage(201, exception.getMessage());
