@@ -2,6 +2,8 @@ package com.lucazz82.task.controllers;
 
 import java.util.ArrayList;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,7 +37,7 @@ public class TaskController {
 	}
 	
 	@PostMapping()
-	public ResponseEntity<TaskModel> newTask(@RequestBody TaskModel task) {
+	public ResponseEntity<TaskModel> newTask(@Valid @RequestBody TaskModel task) {
 		return new ResponseEntity<>(_taskService.newTask(task), HttpStatus.CREATED);
 	}
 	
