@@ -11,5 +11,5 @@ import com.lucazz82.task.models.UserModel;
 
 public interface UserRepository extends CrudRepository<UserModel, Integer>{
 		public ArrayList<UserModel> findAll();
-		public UserModel findByUsername(String username) throws NotFoundException;
+		public Optional<UserModel> findByUsername(String username);
 }

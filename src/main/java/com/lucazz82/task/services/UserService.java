@@ -16,7 +16,7 @@ public class UserService {
 	
 	public UserModel getUserByUsername(String username) {
 		try {
-			UserModel user = _userRepository.findByUsername(username);
+			UserModel user = _userRepository.findByUsername(username).orElseThrow(() -> new NotFoundException("User does not exist"));
 			return user;
 		} catch (NotFoundException e) {
 			throw e;
