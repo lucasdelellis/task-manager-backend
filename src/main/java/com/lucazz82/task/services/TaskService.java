@@ -37,8 +37,8 @@ public class TaskService {
 	}
 	
 	public TaskModel newTask(TaskModel task) {
-		if(task.getContent() == null || task.getContent().isBlank())
-			throw new BadRequestException("Task has missing fields");
+//		if(task.getContent() == null || task.getContent().isBlank())
+//			throw new BadRequestException("Task has missing fields");
 		
 		_taskRepository.save(task);
 		return task;

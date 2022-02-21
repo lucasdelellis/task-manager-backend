@@ -47,7 +47,7 @@ public class TaskController {
 	}
 	
 	@PutMapping(path = "/{id}")
-	public ResponseEntity<TaskModel> editTask(@PathVariable Long id, @RequestBody TaskModel task) {
+	public ResponseEntity<TaskModel> editTask(@PathVariable Long id,@Valid @RequestBody TaskModel task) {
 		return new ResponseEntity<>(_taskService.editTask(id, task), HttpStatus.OK);
 	}
 }

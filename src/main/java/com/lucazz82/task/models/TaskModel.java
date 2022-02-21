@@ -13,7 +13,7 @@ public class TaskModel {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
-	@NotBlank
+	@NotBlank(message = "Content can't be blank")
 	private String content;
 	
 	public TaskModel() {
