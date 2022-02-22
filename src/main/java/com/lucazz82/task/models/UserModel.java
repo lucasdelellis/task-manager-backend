@@ -1,9 +1,13 @@
 package com.lucazz82.task.models;
 
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
 
@@ -18,6 +22,9 @@ public class UserModel {
 	@NotBlank
 	private String password;
 	
+	@OneToMany(mappedBy="user", cascade = CascadeType.ALL)
+	private List<TaskModel> tasks;
+	
 	public UserModel() {
 		super();
 	}
@@ -27,11 +34,12 @@ public class UserModel {
 		this.id = id;
 	}
 
-	public UserModel(Long id, @NotBlank String username, @NotBlank String password) {
+	public UserModel(Long id, @NotBlank String username, @NotBlank String password, List<TaskModel> tasks) {
 		super();
 		this.id = id;
 		this.username = username;
 		this.password = password;
+		this.tasks = tasks;
 	}
 
 	public Long getId() {
@@ -57,7 +65,9 @@ public class UserModel {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	
-	
+
+	public List<TaskModel> getTasks() {
+		return tasks;
+	}
 	
 }
