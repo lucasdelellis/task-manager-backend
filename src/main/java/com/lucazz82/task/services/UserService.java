@@ -9,6 +9,7 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.lucazz82.task.handlers.NotFoundException;
@@ -21,6 +22,8 @@ import com.lucazz82.task.repositories.UserRepository;
 public class UserService implements UserDetailsService {
 	@Autowired
 	private UserRepository _userRepository;
+	@Autowired
+	private PasswordEncoder _passwordEncoder;
 	
 	public UserModel getUserByUsername(String username) {
 		try {
@@ -38,7 +41,8 @@ public class UserService implements UserDetailsService {
 		try {
 			getUserByUsername(user.getUsername());
 			throw new NotUniqueUsernameException("Username already exists");
-		} catch (NotFoundException e) {			
+		} catch (NotFoundException e) {
+			user.setPassword(_passwordEncoder.encode(user.getPassword()));
 			_userRepository.save(user);
 			return user;
 		}
