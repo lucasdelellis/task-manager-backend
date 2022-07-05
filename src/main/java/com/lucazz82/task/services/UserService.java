@@ -12,6 +12,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.lucazz82.task.DTOs.UserDTO;
+import com.lucazz82.task.DTOs.UtilDTO;
 import com.lucazz82.task.handlers.NotFoundException;
 import com.lucazz82.task.handlers.NotUniqueUsernameException;
 import com.lucazz82.task.handlers.ServerErrorException;
@@ -22,30 +24,31 @@ import com.lucazz82.task.repositories.UserRepository;
 public class UserService implements UserDetailsService {
 	@Autowired
 	private UserRepository _userRepository;
+	
 	@Autowired
 	private PasswordEncoder _passwordEncoder;
 	
 	public UserModel getUserByUsername(String username) {
-		try {
-			UserModel user = _userRepository.findByUsername(username).orElseThrow(() -> new NotFoundException("User does not exist"));
-			return user;
-		} catch (NotFoundException e) {
-			throw e;
-		} catch (Exception e) {
-			throw new ServerErrorException("Internal Server Error");
-		}
+		UserModel user = _userRepository.findByUsername(username).orElseThrow(() -> new NotFoundException(String.format("User %s does not exist", username)));
+		return user;
+	}
+	
+	public UserModel getUserById(Long id) {
+		UserModel user = _userRepository.findById(id).orElseThrow(() -> new NotFoundException("Not found"));
+		return user;
 	}
 	
 	
-	public UserModel newUser(UserModel user) {
-		try {
-			getUserByUsername(user.getUsername());
-			throw new NotUniqueUsernameException("Username already exists");
-		} catch (NotFoundException e) {
-			user.setPassword(_passwordEncoder.encode(user.getPassword()));
-			_userRepository.save(user);
-			return user;
+	public UserModel newUser(UserModel user) {		
+		String username = user.getUsername();
+		
+		if(_userRepository.existsByUsername(username)) {
+			throw new NotUniqueUsernameException(String.format("Username %s already exists", username));
 		}
+		
+		user.setPassword(_passwordEncoder.encode(user.getPassword()));
+		_userRepository.save(user);
+		return user;
 	}
 
 
