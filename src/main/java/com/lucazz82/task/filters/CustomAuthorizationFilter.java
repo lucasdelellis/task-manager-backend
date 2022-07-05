@@ -2,8 +2,6 @@ package com.lucazz82.task.filters;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -12,8 +10,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -22,8 +18,6 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.lucazz82.task.handlers.AuthorizationException;
 
 public class CustomAuthorizationFilter extends OncePerRequestFilter {
 
@@ -44,8 +38,7 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
 				// Here we can collect roles if correspond
 				UsernamePasswordAuthenticationToken authenticationToken = 
 						new UsernamePasswordAuthenticationToken(username, null, new ArrayList<>());
-				SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-				filterChain.doFilter(request, response);				
+				SecurityContextHolder.getContext().setAuthentication(authenticationToken);		
 			} else {
 				throw new ServletException("Invalid token");
 			}
