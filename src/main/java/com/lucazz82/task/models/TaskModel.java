@@ -1,6 +1,8 @@
 package com.lucazz82.task.models;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -8,7 +10,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "task")
@@ -19,23 +20,19 @@ public class TaskModel {
 	@NotBlank(message = "Content can't be blank")
 	private String content;
 	
-	@ManyToOne
-	@JoinColumn(name="user_id", nullable=false)
+	@ManyToOne(optional=false, cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
+	@JoinColumn(name="user_id", referencedColumnName = "id")
 	private UserModel user;
 	
 	public TaskModel() {
 		super();
 	}
 
-	public TaskModel(Long id) {
-		super();
-		this.id = id;
-	}
-
-	public TaskModel(Long id, String content) {
+	public TaskModel(Long id, @NotBlank(message = "Content can't be blank") String content, UserModel user) {
 		super();
 		this.id = id;
 		this.content = content;
+		this.user = user;
 	}
 
 	public Long getId() {
@@ -52,6 +49,10 @@ public class TaskModel {
 
 	public void setContent(String content) {
 		this.content = content;
+	}
+
+	public UserModel getUser() {
+		return user;
 	}
 
 	public void setUser(UserModel user) {
