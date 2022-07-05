@@ -16,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.lucazz82.task.DTOs.TaskDTO;
+import com.lucazz82.task.DTOs.UtilDTO;
 import com.lucazz82.task.models.TaskModel;
 import com.lucazz82.task.services.TaskService;
 
@@ -23,31 +25,40 @@ import com.lucazz82.task.services.TaskService;
 @RequestMapping("/task")
 public class TaskController {
 	@Autowired
-	TaskService _taskService;
+	private TaskService _taskService;
+	
+	@Autowired
+	private UtilDTO utilDTO;
 	
 	
 	@GetMapping()
-	public ResponseEntity<ArrayList<TaskModel>> getTasks() {
-		return new ResponseEntity<>(_taskService.getTasks(), HttpStatus.OK);
+	public ResponseEntity<ArrayList<TaskDTO>> getTasks() {
+		ArrayList<TaskModel> tasks = _taskService.getTasks();
+		ArrayList<TaskDTO> tasksDTO = new ArrayList<>(); 
+		tasks.forEach(task -> {
+			tasksDTO.add(utilDTO.taskDTOfromTask(task));
+		});
+		
+		return new ResponseEntity<>(tasksDTO, HttpStatus.OK);
 	}
 	
 	@GetMapping(path = "/{id}")
-	public ResponseEntity<TaskModel> getTask(@PathVariable("id") Long id) {
-		return new ResponseEntity<>(_taskService.getTask(id), HttpStatus.OK);
+	public ResponseEntity<TaskDTO> getTask(@PathVariable("id") Long id) {
+		return new ResponseEntity<>(utilDTO.taskDTOfromTask(_taskService.getTask(id)), HttpStatus.OK);
 	}
 	
 	@PostMapping()
-	public ResponseEntity<TaskModel> newTask(@Valid @RequestBody TaskModel task) {
-		return new ResponseEntity<>(_taskService.newTask(task), HttpStatus.CREATED);
+	public ResponseEntity<TaskDTO> newTask(@Valid @RequestBody TaskModel task) {
+		return new ResponseEntity<>(utilDTO.taskDTOfromTask(_taskService.newTask(task)), HttpStatus.CREATED);
 	}
 	
 	@DeleteMapping(path = "/{id}")
-	public ResponseEntity<TaskModel> deleteTask(@PathVariable Long id) {
-		return new ResponseEntity<>(_taskService.deleteTask(id), HttpStatus.OK);
+	public ResponseEntity<TaskDTO> deleteTask(@PathVariable Long id) {
+		return new ResponseEntity<>(utilDTO.taskDTOfromTask(_taskService.deleteTask(id)), HttpStatus.OK);
 	}
 	
 	@PutMapping(path = "/{id}")
-	public ResponseEntity<TaskModel> editTask(@PathVariable Long id,@Valid @RequestBody TaskModel task) {
-		return new ResponseEntity<>(_taskService.editTask(id, task), HttpStatus.OK);
+	public ResponseEntity<TaskDTO> editTask(@PathVariable Long id,@Valid @RequestBody TaskModel task) {
+		return new ResponseEntity<>(utilDTO.taskDTOfromTask(_taskService.editTask(id, task)), HttpStatus.OK);
 	}
 }
