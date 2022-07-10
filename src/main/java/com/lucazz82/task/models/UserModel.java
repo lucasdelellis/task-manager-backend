@@ -1,11 +1,11 @@
 package com.lucazz82.task.models;
 
-import java.util.Collection;
-import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -18,7 +18,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 @Entity
 @Table(name = "user")
-public class UserModel implements UserDetails {
+public class UserModel {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
@@ -28,16 +28,11 @@ public class UserModel implements UserDetails {
 	private String password;
 	private boolean enabled = true;
 	
-	@OneToMany(mappedBy="user", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy="user", cascade = CascadeType.PERSIST)
 	private List<TaskModel> tasks;
 	
 	public UserModel() {
 		super();
-	}
-
-	public UserModel(Long id) {
-		super();
-		this.id = id;
 	}
 
 	public UserModel(Long id, @NotBlank String username, @NotBlank String password, List<TaskModel> tasks) {
@@ -73,34 +68,7 @@ public class UserModel implements UserDetails {
 	}
 
 	public List<TaskModel> getTasks() {
-		return tasks;
-	}
-
-	// Search what it does
-	@Override
-	public Collection<? extends GrantedAuthority> getAuthorities() {
-		// TODO Auto-generated method stub
-		return new HashSet<GrantedAuthority>();
-	}
-
-	@Override
-	public boolean isAccountNonExpired() {
-		return enabled;
-	}
-
-	@Override
-	public boolean isAccountNonLocked() {
-		return enabled;
-	}
-
-	@Override
-	public boolean isCredentialsNonExpired() {
-		return enabled;
-	}
-
-	@Override
-	public boolean isEnabled() {
-		return enabled;
-	}
-	
+//		return tasks;
+		return new ArrayList<TaskModel>();
+	}	
 }
