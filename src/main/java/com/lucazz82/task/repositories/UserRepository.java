@@ -9,7 +9,8 @@ import com.lucazz82.task.handlers.NotFoundException;
 import com.lucazz82.task.models.TaskModel;
 import com.lucazz82.task.models.UserModel;
 
-public interface UserRepository extends CrudRepository<UserModel, Integer>{
+public interface UserRepository extends CrudRepository<UserModel, Long>{
 		public ArrayList<UserModel> findAll();
 		public Optional<UserModel> findByUsername(String username);
+		public boolean existsByUsername(String username);
 }
