@@ -7,6 +7,8 @@ import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -44,6 +46,8 @@ public class TaskController {
 	
 	@GetMapping(path = "/{id}")
 	public ResponseEntity<TaskDTO> getTask(@PathVariable("id") Long id) {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		String username = (String) authentication.getPrincipal();
 		return new ResponseEntity<>(utilDTO.taskDTOfromTask(_taskService.getTask(id)), HttpStatus.OK);
 	}
 	
