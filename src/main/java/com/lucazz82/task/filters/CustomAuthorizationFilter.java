@@ -25,9 +25,8 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
 		String path = request.getServletPath();
-		String method = request.getMethod();
 		
-		if(isProtected(path, method)) {
+		if(!path.startsWith("/auth")) {
 			String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
 			if(authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
 				String token = authorizationHeader.substring("Bearer ".length());
@@ -48,18 +47,21 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
 
 	}
 	
-	private boolean isProtected(String path, String method) {
-		boolean response = true;
-		
-		if(path.equals("/login")) {
-			response = false;
-		} 
-		
-		if(path.equals("/user") && method.equals(HttpMethod.POST.name())) {
-			response = false;
-		}
-		
-		return response;
-	}
+//	private boolean isProtected(String path, String method) {
+//		boolean response = true;
+//		
+//		if(path.equals("/login")) {
+//			response = false;
+//		} 
+//		
+//		if(path.equals("/user") && method.equals(HttpMethod.POST.name())) {
+//			response = false;
+//		}
+//		
+//		return response;
+//	}
 
+//	private boolean isProtected(String path) {		
+//		return !;
+//	}
 }
