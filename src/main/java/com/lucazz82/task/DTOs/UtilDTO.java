@@ -1,7 +1,12 @@
 package com.lucazz82.task.DTOs;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Component;
 
+import com.lucazz82.task.models.RoleModel;
 import com.lucazz82.task.models.TaskModel;
 import com.lucazz82.task.models.UserModel;
 
@@ -10,19 +15,71 @@ public class UtilDTO {
 	public UserDTO userDTOFromUserModel(UserModel user) {
 		UserDTO dto = new UserDTO();
 		
-		dto.setId(user.getId());
-		dto.setUsername(user.getUsername());
-		dto.setTasks(user.getTasks());
+		BeanUtils.copyProperties(user, dto);
+		
+		Set<RoleDTO> rolesDTO = new HashSet<>();
+		
+		for(RoleModel role : user.getRoles()) {
+			rolesDTO.add(roleDTOFromRoleModel(role));
+		}
+	
+		return dto;
+	}
+	
+	public UserModel userModelFromUserDTO(UserDTO dto) {
+		UserModel user = new UserModel();
+		
+		BeanUtils.copyProperties(dto, user);
+		
+		Set<RoleModel> roles = new HashSet<>();
+		
+		for(RoleDTO roleDTO : dto.getRoles()) {
+			roles.add(roleModelFromRoleDTO(roleDTO));
+		}
+		
+		return user;
+	}
+	
+	public TaskDTO taskDTOFromTaskModel(TaskModel task) {
+		TaskDTO dto = new TaskDTO();
+		
+		BeanUtils.copyProperties(task, dto);
+		
+		dto.setUser(userDTOFromUserModel(task.getUser()));
 		
 		return dto;
 	}
 	
-	public TaskDTO taskDTOfromTask(TaskModel task) {
-		TaskDTO dto = new TaskDTO();
+	public TaskModel taskModelFromTaskDTO(TaskDTO dto) {
+		TaskModel task = new TaskModel();
 		
-		dto.setId(task.getId());
-		dto.setContent(task.getContent());
-		dto.setUser(userDTOFromUserModel(task.getUser()));
+		BeanUtils.copyProperties(dto, task);
+		
+		task.setUser(userModelFromUserDTO(dto.getUser()));
+		
+		return null;
+	}
+	
+	public RoleDTO roleDTOFromRoleModel(RoleModel role) {
+		RoleDTO dto = new RoleDTO();
+		
+		BeanUtils.copyProperties(role, dto);
+		
+		return dto;
+	}
+	
+	public RoleModel roleModelFromRoleDTO(RoleDTO dto) {
+		RoleModel role = new RoleModel();
+		
+		BeanUtils.copyProperties(dto, role);
+		
+		return role;
+	}
+	
+	public SimpleTaskDTO simpleTaskFromTaskModel(TaskModel task) {
+		SimpleTaskDTO dto = new SimpleTaskDTO();
+		
+		BeanUtils.copyProperties(task, dto);
 		
 		return dto;
 	}
