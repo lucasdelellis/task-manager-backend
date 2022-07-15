@@ -2,10 +2,13 @@ package com.lucazz82.task.models;
 
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
@@ -33,6 +36,5 @@ public class RoleModel {
 	private String name;
 	
 	@ManyToMany(mappedBy = "roles")
-	@NotNull
 	private Set<UserModel> users;
 }

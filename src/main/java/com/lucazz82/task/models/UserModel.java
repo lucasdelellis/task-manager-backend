@@ -36,7 +36,7 @@ public class UserModel {
 
 	@ManyToMany(cascade = CascadeType.PERSIST)
 	@JoinTable(name = "user_groups", 
-		joinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"), 
-		inverseJoinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"))
+		joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"), 
+		inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
 	private Set<RoleModel> roles;
 }
