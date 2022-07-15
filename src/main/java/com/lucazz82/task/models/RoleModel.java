@@ -29,6 +29,9 @@ public class RoleModel {
 	@NotNull
 	private Roles role;
 	
+	@NotNull
+	private String name;
+	
 	@ManyToMany(mappedBy = "roles")
 	@NotNull
 	private Set<UserModel> users;
