@@ -12,6 +12,7 @@ import javax.validation.constraints.NotNull;
 
 import com.lucazz82.task.enums.Roles;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -19,6 +20,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "role")
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 public class RoleModel {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -28,5 +30,6 @@ public class RoleModel {
 	private Roles role;
 	
 	@ManyToMany(mappedBy = "roles")
+	@NotNull
 	private Set<UserModel> users;
 }
