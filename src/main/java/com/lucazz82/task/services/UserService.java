@@ -2,6 +2,8 @@ package com.lucazz82.task.services;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -12,18 +14,22 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import com.lucazz82.task.DTOs.UserDTO;
-import com.lucazz82.task.DTOs.UtilDTO;
+import com.lucazz82.task.enums.Roles;
 import com.lucazz82.task.handlers.NotFoundException;
 import com.lucazz82.task.handlers.NotUniqueUsernameException;
 import com.lucazz82.task.handlers.ServerErrorException;
+import com.lucazz82.task.models.RoleModel;
 import com.lucazz82.task.models.UserModel;
+import com.lucazz82.task.repositories.RoleRepository;
 import com.lucazz82.task.repositories.UserRepository;
 
 @Service
 public class UserService implements UserDetailsService {
 	@Autowired
 	private UserRepository _userRepository;
+	
+	@Autowired
+	private RoleRepository _roleRepository;
 	
 	@Autowired
 	private PasswordEncoder _passwordEncoder;
@@ -39,15 +45,20 @@ public class UserService implements UserDetailsService {
 	}
 	
 	
-	public UserModel newUser(UserModel user) {		
+	public UserModel newUser(UserModel user) {
 		String username = user.getUsername();
+		String password = user.getPassword();
 		
 		if(_userRepository.existsByUsername(username)) {
 			throw new NotUniqueUsernameException(String.format("Username %s already exists", username));
 		}
 		
-		user.setPassword(_passwordEncoder.encode(user.getPassword()));
+		user.setPassword(_passwordEncoder.encode(password));
+		Set<RoleModel> roles = new HashSet<>();
+		roles.add(_roleRepository.findByRole(Roles.USER).orElseThrow(() -> new ServerErrorException(String.format("Role {} not found", Roles.USER.getName()))));
+		user.setRoles(roles);
 		_userRepository.save(user);
+		
 		return user;
 	}
 

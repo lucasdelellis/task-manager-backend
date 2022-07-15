@@ -12,7 +12,7 @@ import com.lucazz82.task.models.UserModel;
 
 @Component
 public class UtilDTO {
-	public UserDTO userDTOFromUserModel(UserModel user) {
+	public static UserDTO userDTOFromUserModel(UserModel user) {
 		UserDTO dto = new UserDTO();
 		
 		BeanUtils.copyProperties(user, dto);
@@ -23,10 +23,12 @@ public class UtilDTO {
 			rolesDTO.add(roleDTOFromRoleModel(role));
 		}
 	
+		dto.setRoles(rolesDTO);
+		
 		return dto;
 	}
 	
-	public UserModel userModelFromUserDTO(UserDTO dto) {
+	public static UserModel userModelFromUserDTO(UserDTO dto) {
 		UserModel user = new UserModel();
 		
 		BeanUtils.copyProperties(dto, user);
@@ -37,10 +39,12 @@ public class UtilDTO {
 			roles.add(roleModelFromRoleDTO(roleDTO));
 		}
 		
+		user.setRoles(roles);
+		
 		return user;
 	}
 	
-	public TaskDTO taskDTOFromTaskModel(TaskModel task) {
+	public static TaskDTO taskDTOFromTaskModel(TaskModel task) {
 		TaskDTO dto = new TaskDTO();
 		
 		BeanUtils.copyProperties(task, dto);
@@ -50,7 +54,7 @@ public class UtilDTO {
 		return dto;
 	}
 	
-	public TaskModel taskModelFromTaskDTO(TaskDTO dto) {
+	public static TaskModel taskModelFromTaskDTO(TaskDTO dto) {
 		TaskModel task = new TaskModel();
 		
 		BeanUtils.copyProperties(dto, task);
@@ -60,7 +64,7 @@ public class UtilDTO {
 		return null;
 	}
 	
-	public RoleDTO roleDTOFromRoleModel(RoleModel role) {
+	public static RoleDTO roleDTOFromRoleModel(RoleModel role) {
 		RoleDTO dto = new RoleDTO();
 		
 		BeanUtils.copyProperties(role, dto);
@@ -68,7 +72,7 @@ public class UtilDTO {
 		return dto;
 	}
 	
-	public RoleModel roleModelFromRoleDTO(RoleDTO dto) {
+	public static RoleModel roleModelFromRoleDTO(RoleDTO dto) {
 		RoleModel role = new RoleModel();
 		
 		BeanUtils.copyProperties(dto, role);
@@ -76,11 +80,19 @@ public class UtilDTO {
 		return role;
 	}
 	
-	public SimpleTaskDTO simpleTaskFromTaskModel(TaskModel task) {
+	public static SimpleTaskDTO simpleTaskFromTaskModel(TaskModel task) {
 		SimpleTaskDTO dto = new SimpleTaskDTO();
 		
 		BeanUtils.copyProperties(task, dto);
 		
 		return dto;
+	}
+	
+	public static UserModel userModelFromRegisterDTO(RegisterDTO register) {
+		UserModel user = new UserModel();
+		
+		BeanUtils.copyProperties(register, user);
+		
+		return user;
 	}
 }
