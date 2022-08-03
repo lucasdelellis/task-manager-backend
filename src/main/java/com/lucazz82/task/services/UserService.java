@@ -2,8 +2,9 @@ package com.lucazz82.task.services;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
+
+import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -54,9 +55,9 @@ public class UserService implements UserDetailsService {
 		}
 		
 		user.setPassword(_passwordEncoder.encode(password));
-		Set<RoleModel> roles = new HashSet<>();
-		roles.add(_roleRepository.findByRole(Roles.USER).orElseThrow(() -> new ServerErrorException(String.format("Role {} not found", Roles.USER.getName()))));
-		user.setRoles(roles);
+		RoleModel role = _roleRepository.findByRole(Roles.USER)
+				.orElseThrow(() -> new ServerErrorException(String.format("Role {} not found", Roles.USER.getName()))); 
+		user.addRole(role);
 		_userRepository.save(user);
 		
 		return user;
@@ -64,9 +65,16 @@ public class UserService implements UserDetailsService {
 
 
 	@Override
+	@Transactional
 	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 		UserModel user = _userRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException(username + " not found"));
+		List<RoleModel> roles = user.getRoles();
+		
 		Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
+		
+		roles.forEach(role -> {
+			authorities.add(new SimpleGrantedAuthority(role.getName()));
+		});
 		return new User(user.getUsername(), user.getPassword(), authorities);
 	}
 }
