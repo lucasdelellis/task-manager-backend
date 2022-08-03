@@ -1,9 +1,13 @@
 package com.lucazz82.task.models;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -35,6 +39,10 @@ public class RoleModel {
 	@NotNull
 	private String name;
 	
-	@ManyToMany(mappedBy = "roles")
-	private Set<UserModel> users;
+	@ManyToMany(mappedBy = "roles", fetch = FetchType.LAZY)
+	private List<UserModel> users = new ArrayList<>();
+
+	public void addUser(UserModel user) {
+		this.users.add(user);
+	}
 }

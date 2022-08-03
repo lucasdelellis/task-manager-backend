@@ -1,8 +1,6 @@
 package com.lucazz82.task;
 
-import java.util.HashSet;
-
-import javax.management.relation.Role;
+import java.util.ArrayList;
 
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -32,7 +30,7 @@ public class TaskApplication {
 	CommandLineRunner run(RoleRepository roleRepository) {
 		return args -> {
 			for(Roles role : Roles.values()) {
-				roleRepository.save(new RoleModel(null, role, role.getName(), new HashSet<UserModel>()));
+				roleRepository.save(new RoleModel(null, role, role.getName(), new ArrayList<UserModel>()));
 			}
 		};
 	}

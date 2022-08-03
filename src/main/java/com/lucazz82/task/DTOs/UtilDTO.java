@@ -1,6 +1,8 @@
 package com.lucazz82.task.DTOs;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.BeanUtils;
@@ -33,7 +35,7 @@ public class UtilDTO {
 		
 		BeanUtils.copyProperties(dto, user);
 		
-		Set<RoleModel> roles = new HashSet<>();
+		List<RoleModel> roles = new ArrayList<>();
 		
 		for(RoleDTO roleDTO : dto.getRoles()) {
 			roles.add(roleModelFromRoleDTO(roleDTO));
