@@ -2,6 +2,8 @@ package com.lucazz82.task.filters;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -9,8 +11,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -34,9 +36,14 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
 				JWTVerifier verifier = JWT.require(algorithm).build();
 				DecodedJWT decodedJWT = verifier.verify(token);
 				String username = decodedJWT.getSubject(); // Obtain username
-				// Here we can collect roles if correspond
+				
+				// Obtain roles
+				String[] roles = decodedJWT.getClaim("roles").asArray(String.class);
+				Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
+				Arrays.stream(roles).forEach(role -> authorities.add(new SimpleGrantedAuthority(role)));
+
 				UsernamePasswordAuthenticationToken authenticationToken = 
-						new UsernamePasswordAuthenticationToken(username, null, new ArrayList<>());
+						new UsernamePasswordAuthenticationToken(username, null, authorities);
 				SecurityContextHolder.getContext().setAuthentication(authenticationToken);		
 			} else {
 				throw new ServletException("Invalid token");
