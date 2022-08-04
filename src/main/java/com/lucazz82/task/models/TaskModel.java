@@ -27,4 +27,9 @@ public class TaskModel {
 	@ManyToOne(optional=false, fetch = FetchType.EAGER)
 	@JoinColumn(name="user_id", referencedColumnName = "id")
 	private UserModel user;	
+	
+	public void setUser(UserModel user) {
+		this.user = user;
+		user.addTask(this);
+	}
 }

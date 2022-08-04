@@ -49,4 +49,8 @@ public class UserModel {
 		this.roles.add(role);
 		role.addUser(this);
 	}
+
+	public void addTask(TaskModel task) {
+		this.tasks.add(task);		
+	}
 }
