@@ -1,9 +1,7 @@
 package com.lucazz82.task.DTOs;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Component;
@@ -19,7 +17,7 @@ public class UtilDTO {
 		
 		BeanUtils.copyProperties(user, dto);
 		
-		Set<RoleDTO> rolesDTO = new HashSet<>();
+		List<RoleDTO> rolesDTO = new ArrayList<>();
 		
 		for(RoleModel role : user.getRoles()) {
 			rolesDTO.add(roleDTOFromRoleModel(role));
@@ -60,10 +58,8 @@ public class UtilDTO {
 		TaskModel task = new TaskModel();
 		
 		BeanUtils.copyProperties(dto, task);
-		
-		task.setUser(userModelFromUserDTO(dto.getUser()));
-		
-		return null;
+				
+		return task;
 	}
 	
 	public static RoleDTO roleDTOFromRoleModel(RoleModel role) {
