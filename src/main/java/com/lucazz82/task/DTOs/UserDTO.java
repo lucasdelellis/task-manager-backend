@@ -1,6 +1,6 @@
 package com.lucazz82.task.DTOs;
 
-import java.util.Set;
+import java.util.List;
 
 import lombok.Data;
 
@@ -8,5 +8,5 @@ import lombok.Data;
 public class UserDTO {
 	private Long id;
 	private String username;
-	private Set<RoleDTO> roles;
+	private List<RoleDTO> roles;
 }
