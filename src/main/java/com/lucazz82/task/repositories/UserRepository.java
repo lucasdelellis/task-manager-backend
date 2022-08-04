@@ -5,8 +5,6 @@ import java.util.Optional;
 
 import org.springframework.data.repository.CrudRepository;
 
-import com.lucazz82.task.handlers.NotFoundException;
-import com.lucazz82.task.models.TaskModel;
 import com.lucazz82.task.models.UserModel;
 
 public interface UserRepository extends CrudRepository<UserModel, Long>{
