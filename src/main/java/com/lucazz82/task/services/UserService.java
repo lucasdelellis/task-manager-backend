@@ -7,7 +7,9 @@ import java.util.List;
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -55,12 +57,19 @@ public class UserService implements UserDetailsService {
 		}
 		
 		user.setPassword(_passwordEncoder.encode(password));
-		RoleModel role = _roleRepository.findByRole(Roles.USER)
-				.orElseThrow(() -> new ServerErrorException(String.format("Role {} not found", Roles.USER.getName()))); 
+		RoleModel role = _roleRepository.findByRole(Roles.ROLE_USER)
+				.orElseThrow(() -> new ServerErrorException(String.format("Role {} not found", Roles.ROLE_USER.getName()))); 
 		user.addRole(role);
 		_userRepository.save(user);
 		
 		return user;
+	}
+	
+	
+	public UserModel getUserFromSecurityContext() {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		String username = (String) authentication.getPrincipal();
+		return getUserByUsername(username);
 	}
 
 
@@ -73,7 +82,7 @@ public class UserService implements UserDetailsService {
 		Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
 		
 		roles.forEach(role -> {
-			authorities.add(new SimpleGrantedAuthority(role.getName()));
+			authorities.add(new SimpleGrantedAuthority(role.getRole().name()));
 		});
 		return new User(user.getUsername(), user.getPassword(), authorities);
 	}
