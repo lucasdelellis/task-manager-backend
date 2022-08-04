@@ -22,6 +22,13 @@ public class GlobalExceptionHandler {
 		return new ErrorMessage(200, exception.getMessage());
 	}
 	
+	@ResponseStatus(HttpStatus.FORBIDDEN)
+	@ExceptionHandler(ForbiddenException.class)
+	@ResponseBody
+	public ErrorMessage forbidden(ForbiddenException exception) {
+		return new ErrorMessage(200, exception.getMessage());
+	}
+	
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ExceptionHandler(BadRequestException.class)
 	@ResponseBody
