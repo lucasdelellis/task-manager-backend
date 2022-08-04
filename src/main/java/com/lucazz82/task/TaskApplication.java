@@ -30,7 +30,8 @@ public class TaskApplication {
 	CommandLineRunner run(RoleRepository roleRepository) {
 		return args -> {
 			for(Roles role : Roles.values()) {
-				roleRepository.save(new RoleModel(null, role, role.getName(), new ArrayList<UserModel>()));
+				if(!roleRepository.existsByRole(role))
+					roleRepository.save(new RoleModel(null, role, role.getName(), new ArrayList<UserModel>()));
 			}
 		};
 	}
