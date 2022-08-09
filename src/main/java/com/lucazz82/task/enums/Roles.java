@@ -1,8 +1,8 @@
 package com.lucazz82.task.enums;
 
 public enum Roles {
-	ROLE_ADMIN("admin"),
-	ROLE_USER("user");
+	ADMIN("admin"),
+	USER("user");
 	
 	String name;
 	
