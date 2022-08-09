@@ -107,14 +107,14 @@ public class TaskController {
 	 * Edit task by id. 
 	 * @param userId
 	 * @param id
-	 * @param newTask
+	 * @param editedTask
 	 * @return
 	 */
 	@PutMapping(path = "/{id}")
-	public ResponseEntity<TaskDTO> editTask(@PathVariable("user_id") Long userId, @PathVariable Long id, @Valid @RequestBody TaskDTO newTask) {
+	public ResponseEntity<TaskDTO> editTask(@PathVariable("user_id") Long userId, @PathVariable Long id, @Valid @RequestBody TaskDTO editedTask) {
 		UserModel user = getValidatedUser(userId);
 		
-		TaskModel task = UtilDTO.taskModelFromTaskDTO(newTask);
+		TaskModel task = UtilDTO.taskModelFromTaskDTO(editedTask);
 		task = _taskService.editTask(user, id, task);
 		TaskDTO dto = UtilDTO.taskDTOFromTaskModel(task);
 		
