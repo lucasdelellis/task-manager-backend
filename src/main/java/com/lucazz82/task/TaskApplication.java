@@ -2,6 +2,8 @@ package com.lucazz82.task;
 
 import java.util.ArrayList;
 
+import javax.transaction.Transactional;
+
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -13,6 +15,7 @@ import com.lucazz82.task.enums.Roles;
 import com.lucazz82.task.models.RoleModel;
 import com.lucazz82.task.models.UserModel;
 import com.lucazz82.task.repositories.RoleRepository;
+import com.lucazz82.task.services.UserService;
 
 @SpringBootApplication
 public class TaskApplication {
@@ -27,12 +30,15 @@ public class TaskApplication {
 	}
 	
 	@Bean
-	CommandLineRunner run(RoleRepository roleRepository) {
+	CommandLineRunner run(RoleRepository roleRepository, UserService userService) {
 		return args -> {
 			for(Roles role : Roles.values()) {
 				if(!roleRepository.existsByRole(role))
 					roleRepository.save(new RoleModel(null, role, role.getName(), new ArrayList<UserModel>()));
 			}
+			
+			UserModel admin = new UserModel(null, "admin", "admin", new ArrayList<>(), new ArrayList<>());
+			userService.createAdmin(admin);
 		};
 	}
 }
