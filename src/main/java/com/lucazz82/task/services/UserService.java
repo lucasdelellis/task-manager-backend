@@ -57,8 +57,8 @@ public class UserService implements UserDetailsService {
 		}
 		
 		user.setPassword(_passwordEncoder.encode(password));
-		RoleModel role = _roleRepository.findByRole(Roles.ROLE_USER)
-				.orElseThrow(() -> new ServerErrorException(String.format("Role {} not found", Roles.ROLE_USER.getName()))); 
+		RoleModel role = _roleRepository.findByRole(Roles.USER)
+				.orElseThrow(() -> new ServerErrorException(String.format("Role {} not found", Roles.USER.getName()))); 
 		user.addRole(role);
 		_userRepository.save(user);
 		
@@ -71,6 +71,32 @@ public class UserService implements UserDetailsService {
 		String username = (String) authentication.getPrincipal();
 		return getUserByUsername(username);
 	}
+	
+	
+	public void changePassword(Long id, String password) {
+		UserModel user = getUserById(id);
+		user.setPassword(_passwordEncoder.encode(password));
+		_userRepository.save(user);
+	}
+	
+	@Transactional
+	public void createAdmin(UserModel user) {
+		String username = user.getUsername();
+		String password = user.getPassword();
+		
+		if(_userRepository.existsByUsername(username)) {
+			throw new NotUniqueUsernameException(String.format("Username %s already exists", username));
+		}
+		
+		user.setPassword(_passwordEncoder.encode(password));
+		RoleModel role = _roleRepository.findByRole(Roles.USER)
+				.orElseThrow(() -> new ServerErrorException(String.format("Role {} not found", Roles.USER.getName()))); 
+		user.addRole(role);
+		role = _roleRepository.findByRole(Roles.ADMIN)
+				.orElseThrow(() -> new ServerErrorException(String.format("Role {} not found", Roles.ADMIN.getName()))); 
+		user.addRole(role);
+		_userRepository.save(user);
+	}
 
 
 	@Override
@@ -82,8 +108,12 @@ public class UserService implements UserDetailsService {
 		Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
 		
 		roles.forEach(role -> {
-			authorities.add(new SimpleGrantedAuthority(role.getRole().name()));
+			authorities.add(new SimpleGrantedAuthority("ROLE_" + role.getRole().name()));
 		});
 		return new User(user.getUsername(), user.getPassword(), authorities);
+	}
+
+	public List<UserModel> getUsers() {
+		return _userRepository.findAll();
 	}
 }
