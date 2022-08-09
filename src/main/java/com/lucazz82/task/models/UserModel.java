@@ -35,7 +35,7 @@ public class UserModel {
 	private String password;
 
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-	private List<TaskModel> tasks;
+	private List<TaskModel> tasks = new ArrayList<>();
 
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "user_groups", 
