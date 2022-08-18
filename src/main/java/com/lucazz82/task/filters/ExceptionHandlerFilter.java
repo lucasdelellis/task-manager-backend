@@ -13,6 +13,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lucazz82.task.handlers.ErrorMessage;
+import com.lucazz82.task.handlers.InvalidTokenException;
 
 public class ExceptionHandlerFilter extends OncePerRequestFilter {
 
@@ -22,12 +23,14 @@ public class ExceptionHandlerFilter extends OncePerRequestFilter {
 		try {
 			filterChain.doFilter(request, response);
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
-			ErrorMessage error = new ErrorMessage(502, e.getMessage());
+			response.setStatus(HttpStatus.BAD_REQUEST.value());
+			int code = 502;
+			if(e instanceof InvalidTokenException)
+				code = ((InvalidTokenException) e).getCode();
+			ErrorMessage error = new ErrorMessage(code, e.getMessage());
 			response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 			ObjectMapper objectMapper = new ObjectMapper();
 			objectMapper.writeValue(response.getOutputStream(), error);
-			response.setStatus(HttpStatus.FORBIDDEN.value());
 		}
 
 	}

@@ -16,10 +16,8 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.JWTVerifier;
-import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.lucazz82.task.services.UtilService;
 
 public class CustomAuthorizationFilter extends OncePerRequestFilter {
 
@@ -30,24 +28,17 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
 
 		if (!path.startsWith("/auth")) {
 			String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
-			if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-				String token = authorizationHeader.substring("Bearer ".length());
-				Algorithm algorithm = Algorithm.HMAC256("secret key".getBytes());
-				JWTVerifier verifier = JWT.require(algorithm).build();
-				DecodedJWT decodedJWT = verifier.verify(token);
-				String username = decodedJWT.getSubject(); // Obtain username
+			DecodedJWT decodedJWT = UtilService.getJWTFromHeader(authorizationHeader);
+			String username = decodedJWT.getSubject(); // Obtain username
 
-				// Obtain roles
-				String[] roles = decodedJWT.getClaim("roles").asArray(String.class);
-				Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
-				Arrays.stream(roles).forEach(role -> authorities.add(new SimpleGrantedAuthority(role)));
+			// Obtain roles
+			String[] roles = decodedJWT.getClaim("roles").asArray(String.class);
+			Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
+			Arrays.stream(roles).forEach(role -> authorities.add(new SimpleGrantedAuthority(role)));
 
-				UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
-						username, null, authorities);
-				SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-			} else {
-				throw new ServletException("Invalid token");
-			}
+			UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
+					username, null, authorities);
+			SecurityContextHolder.getContext().setAuthentication(authenticationToken);
 		}
 
 		filterChain.doFilter(request, response);
