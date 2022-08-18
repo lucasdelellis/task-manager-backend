@@ -7,4 +7,3 @@ public class SimpleTaskDTO {
 	private Long id;
 	private String content;
 }
-

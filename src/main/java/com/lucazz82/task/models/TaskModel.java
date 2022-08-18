@@ -23,11 +23,11 @@ public class TaskModel {
 	private Long id;
 	@NotBlank(message = "Content can't be blank")
 	private String content;
-	
-	@ManyToOne(optional=false, fetch = FetchType.EAGER)
-	@JoinColumn(name="user_id", referencedColumnName = "id")
-	private UserModel user;	
-	
+
+	@ManyToOne(optional = false, fetch = FetchType.EAGER)
+	@JoinColumn(name = "user_id", referencedColumnName = "id")
+	private UserModel user;
+
 	public void setUser(UserModel user) {
 		this.user = user;
 		user.addTask(this);

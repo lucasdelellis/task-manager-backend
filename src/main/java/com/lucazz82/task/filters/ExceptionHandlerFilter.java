@@ -15,13 +15,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lucazz82.task.handlers.ErrorMessage;
 
 public class ExceptionHandlerFilter extends OncePerRequestFilter {
-	
+
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 			throws ServletException, IOException {
 		try {
 			filterChain.doFilter(request, response);
-		} catch(Exception e) {
+		} catch (Exception e) {
 			System.out.println(e.getMessage());
 			ErrorMessage error = new ErrorMessage(502, e.getMessage());
 			response.setContentType(MediaType.APPLICATION_JSON_VALUE);

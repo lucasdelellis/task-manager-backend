@@ -21,16 +21,16 @@ import com.lucazz82.task.filters.ExceptionHandlerFilter;
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-	
+
 	@Autowired
 	private UserDetailsService _userDetailsService;
-	
+
 	@Autowired
 	private BCryptPasswordEncoder _bCryptPasswordEncorder;
 
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-		auth.userDetailsService(this._userDetailsService).passwordEncoder(this._bCryptPasswordEncorder);		
+		auth.userDetailsService(this._userDetailsService).passwordEncoder(this._bCryptPasswordEncorder);
 	}
 
 	@Override
@@ -38,7 +38,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		// Configuration of login url
 		CustomAuthenticationFilter filter = new CustomAuthenticationFilter(this.authenticationManagerBean());
 		filter.setFilterProcessesUrl("/auth/login");
-		
+
 		http.csrf().disable();
 		http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 		http.authorizeRequests().antMatchers("/auth/**").permitAll(); // Register
@@ -55,7 +55,5 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	public AuthenticationManager authenticationManagerBean() throws Exception {
 		return super.authenticationManagerBean();
 	}
-	
-	
 
 }

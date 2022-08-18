@@ -9,5 +9,5 @@ public class TaskDTO {
 	private Long id;
 	@NotBlank(message = "Content cannot be blank")
 	private String content;
-	private UserDTO user;	
+	private UserDTO user;
 }

@@ -2,8 +2,6 @@ package com.lucazz82.task;
 
 import java.util.ArrayList;
 
-import javax.transaction.Transactional;
-
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -20,7 +18,7 @@ import com.lucazz82.task.services.UserService;
 
 @SpringBootApplication
 public class TaskApplication {
-	
+
 	public static void main(String[] args) {
 		SpringApplication.run(TaskApplication.class, args);
 	}
@@ -29,16 +27,16 @@ public class TaskApplication {
 	PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
 	}
-	
+
 	@Bean
 	CommandLineRunner run(RoleRepository roleRepository, UserService userService, UserRepository userRepository) {
 		return args -> {
-			for(Roles role : Roles.values()) {
-				if(!roleRepository.existsByRole(role))
+			for (Roles role : Roles.values()) {
+				if (!roleRepository.existsByRole(role))
 					roleRepository.save(new RoleModel(null, role, role.getName(), new ArrayList<UserModel>()));
 			}
-			
-			if(!userRepository.existsByUsername("admin")) {
+
+			if (!userRepository.existsByUsername("admin")) {
 				UserModel admin = new UserModel(null, "admin", "admin", new ArrayList<>(), new ArrayList<>());
 				userService.createAdmin(admin);
 			}

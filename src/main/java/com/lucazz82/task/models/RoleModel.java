@@ -27,13 +27,13 @@ public class RoleModel {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long id;
-	
+
 	@NotNull
 	private Roles role;
-	
+
 	@NotNull
 	private String name;
-	
+
 	@ManyToMany(mappedBy = "roles", fetch = FetchType.LAZY)
 	private List<UserModel> users = new ArrayList<>();
 

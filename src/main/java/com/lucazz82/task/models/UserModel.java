@@ -38,17 +38,15 @@ public class UserModel {
 	private List<TaskModel> tasks = new ArrayList<>();
 
 	@ManyToMany(fetch = FetchType.LAZY)
-	@JoinTable(name = "user_groups", 
-		joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"), 
-		inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
+	@JoinTable(name = "user_groups", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "role_id", referencedColumnName = "id"))
 	private List<RoleModel> roles = new ArrayList<>();
-	
+
 	public void addRole(RoleModel role) {
 		this.roles.add(role);
 		role.addUser(this);
 	}
 
 	public void addTask(TaskModel task) {
-		this.tasks.add(task);		
+		this.tasks.add(task);
 	}
 }

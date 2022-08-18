@@ -3,7 +3,7 @@ package com.lucazz82.task.handlers;
 public class ErrorMessage {
 	private Integer code;
 	private String message;
-	
+
 	public ErrorMessage(Integer code, String message) {
 		super();
 		this.code = code;
@@ -25,6 +25,5 @@ public class ErrorMessage {
 	public void setMessage(String message) {
 		this.message = message;
 	}
-	
-	
+
 }

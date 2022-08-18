@@ -31,49 +31,51 @@ import com.lucazz82.task.services.UserService;
 public class TaskController {
 	@Autowired
 	private TaskService _taskService;
-	
+
 	@Autowired
-	private UserService _userService;	
-	
+	private UserService _userService;
+
 	/**
 	 * Get all tasks for a given user.
+	 * 
 	 * @param userId id of the user.
 	 * @return all tasks.
 	 */
 	@GetMapping()
 	public ResponseEntity<ArrayList<SimpleTaskDTO>> getTasks(@PathVariable("user_id") Long userId) {
 		UserModel user = getValidatedUser(userId);
-		
+
 		List<TaskModel> tasks = user.getTasks();
-		
-		ArrayList<SimpleTaskDTO> tasksDTO = new ArrayList<>(); 
-		
+
+		ArrayList<SimpleTaskDTO> tasksDTO = new ArrayList<>();
+
 		tasks.forEach(task -> {
 			tasksDTO.add(UtilDTO.simpleTaskFromTaskModel(task));
 		});
-		
+
 		return new ResponseEntity<>(tasksDTO, HttpStatus.OK);
 	}
-	
+
 	/**
 	 * Return task of the given id.
+	 * 
 	 * @param userId id of the user.
-	 * @param id id of the task.
+	 * @param id     id of the task.
 	 * @return task.
 	 */
 	@GetMapping(path = "/{id}")
 	public ResponseEntity<TaskDTO> getTask(@PathVariable("user_id") Long userId, @PathVariable("id") Long id) {
 		UserModel user = getValidatedUser(userId);
-		
+
 		TaskModel task = _taskService.getTask(user, id);
 		TaskDTO dto = UtilDTO.taskDTOFromTaskModel(task);
-		
+
 		return new ResponseEntity<>(dto, HttpStatus.OK);
 	}
-	
-	
+
 	/**
 	 * Create new task.
+	 * 
 	 * @param userId
 	 * @param taskDTO
 	 * @return
@@ -81,14 +83,15 @@ public class TaskController {
 	@PostMapping()
 	public ResponseEntity<TaskDTO> newTask(@PathVariable("user_id") Long userId, @Valid @RequestBody TaskDTO taskDTO) {
 		UserModel user = getValidatedUser(userId);
-		
+
 		TaskModel task = UtilDTO.taskModelFromTaskDTO(taskDTO);
-		
+
 		return new ResponseEntity<>(UtilDTO.taskDTOFromTaskModel(_taskService.newTask(user, task)), HttpStatus.CREATED);
 	}
 
 	/**
-	 * Delete task by id. 
+	 * Delete task by id.
+	 * 
 	 * @param userId
 	 * @param id
 	 * @return
@@ -96,43 +99,46 @@ public class TaskController {
 	@DeleteMapping(path = "/{id}")
 	public ResponseEntity<TaskDTO> deleteTask(@PathVariable("user_id") Long userId, @PathVariable Long id) {
 		UserModel user = getValidatedUser(userId);
-		
+
 		TaskModel task = _taskService.deleteTask(user, id);
 		TaskDTO dto = UtilDTO.taskDTOFromTaskModel(task);
-		
+
 		return new ResponseEntity<>(dto, HttpStatus.OK);
 	}
-	
+
 	/**
-	 * Edit task by id. 
+	 * Edit task by id.
+	 * 
 	 * @param userId
 	 * @param id
 	 * @param editedTask
 	 * @return
 	 */
 	@PutMapping(path = "/{id}")
-	public ResponseEntity<TaskDTO> editTask(@PathVariable("user_id") Long userId, @PathVariable Long id, @Valid @RequestBody TaskDTO editedTask) {
+	public ResponseEntity<TaskDTO> editTask(@PathVariable("user_id") Long userId, @PathVariable Long id,
+			@Valid @RequestBody TaskDTO editedTask) {
 		UserModel user = getValidatedUser(userId);
-		
+
 		TaskModel task = UtilDTO.taskModelFromTaskDTO(editedTask);
 		task = _taskService.editTask(user, id, task);
 		TaskDTO dto = UtilDTO.taskDTOFromTaskModel(task);
-		
+
 		return new ResponseEntity<>(dto, HttpStatus.OK);
 	}
 
 	/**
-	 * Validate that the user in security context match the id given in path. 
+	 * Validate that the user in security context match the id given in path.
+	 * 
 	 * @param userId
 	 * @return
 	 */
 	private UserModel getValidatedUser(Long userId) {
 		UserModel user = _userService.getUserFromSecurityContext();
-		
-		if(user.getId() != userId) {
+
+		if (user.getId() != userId) {
 			throw new ForbiddenException("invalid user id");
 		}
-		
+
 		return user;
 	}
 }

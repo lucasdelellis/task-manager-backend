@@ -27,43 +27,43 @@ import lombok.NoArgsConstructor;
 public class UserController {
 	@Autowired
 	private UserService _userService;
-	
+
 	@GetMapping("/{id}")
 	public ResponseEntity<UserDTO> getUserInformation(@PathVariable("id") Long id) {
 		UserModel user = getValidatedUser(id);
 		UserDTO dto = UtilDTO.userDTOFromUserModel(user);
-		
+
 		return new ResponseEntity<UserDTO>(dto, HttpStatus.OK);
 	}
-	
+
 	@PutMapping("/{id}")
 	public ResponseEntity<String> changePassword(@PathVariable("id") Long id, @Valid @RequestBody Password password) {
 		getValidatedUser(id);
-		_userService.changePassword(id, password.getPassword());		
-		
+		_userService.changePassword(id, password.getPassword());
+
 		return ResponseEntity.ok().build();
 	}
-	
+
 	/**
-	 * Validate that the user in security context match the id given in path. 
+	 * Validate that the user in security context match the id given in path.
+	 * 
 	 * @param userId
 	 * @return
 	 */
 	private UserModel getValidatedUser(Long userId) {
 		UserModel user = _userService.getUserFromSecurityContext();
-		
-		if(user.getId() != userId) {
+
+		if (user.getId() != userId) {
 			throw new ForbiddenException("invalid user id");
 		}
-		
+
 		return user;
 	}
-	
+
 	@Data
 	@NoArgsConstructor
 	public class Password {
-		@NotBlank(message = "password cannot be null") 
+		@NotBlank(message = "password cannot be null")
 		String password;
 	}
 }
-

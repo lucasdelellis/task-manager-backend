@@ -49,25 +49,22 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
 			Authentication authentication) throws IOException, ServletException {
 		User user = (User) authentication.getPrincipal();
 		Algorithm algorithm = Algorithm.HMAC256("secret key".getBytes());
-		
+
 		List<String> authorities = new ArrayList<>();
 		user.getAuthorities().forEach(authority -> authorities.add(authority.getAuthority()));
 
 		String access_token = JWT.create().withSubject(user.getUsername())
 				.withExpiresAt(new Date(System.currentTimeMillis() + 10 * 60 * 1000))
-				.withIssuer(request.getRequestURL().toString())
-				.withClaim("roles", authorities)
-				.sign(algorithm);
-		
+				.withIssuer(request.getRequestURL().toString()).withClaim("roles", authorities).sign(algorithm);
+
 		String refresh_token = JWT.create().withSubject(user.getUsername())
 				.withExpiresAt(new Date(System.currentTimeMillis() + 30 * 60 * 1000))
-				.withIssuer(request.getRequestURL().toString())
-				.sign(algorithm);
-		
+				.withIssuer(request.getRequestURL().toString()).sign(algorithm);
+
 		HashMap<String, String> tokens = new HashMap<>();
 		tokens.put("access_token", access_token);
 		tokens.put("refresh_token", refresh_token);
-		
+
 		response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 		ObjectMapper objectMapper = new ObjectMapper();
 		objectMapper.writeValue(response.getOutputStream(), tokens);
@@ -77,12 +74,10 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
 	protected void unsuccessfulAuthentication(HttpServletRequest request, HttpServletResponse response,
 			AuthenticationException failed) throws IOException, ServletException {
 		HashMap<String, String> tokens = new HashMap<>();
-		tokens.put("msg", "login failure");		
+		tokens.put("msg", "login failure");
 		response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 		ObjectMapper objectMapper = new ObjectMapper();
 		objectMapper.writeValue(response.getOutputStream(), tokens);
 	}
-	
-	
 
 }

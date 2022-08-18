@@ -20,7 +20,7 @@ import com.lucazz82.task.services.UserService;
 public class AdminController {
 	@Autowired
 	private UserService _userService;
-	
+
 	@GetMapping()
 	public ResponseEntity<List<UserDTO>> getUsers() {
 		List<UserModel> users = _userService.getUsers();
@@ -28,7 +28,7 @@ public class AdminController {
 		users.forEach(user -> {
 			dtos.add(UtilDTO.userDTOFromUserModel(user));
 		});
-		
+
 		return new ResponseEntity<List<UserDTO>>(dtos, HttpStatus.OK);
 	}
 }
