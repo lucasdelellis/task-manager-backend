@@ -15,6 +15,7 @@ import com.lucazz82.task.enums.Roles;
 import com.lucazz82.task.models.RoleModel;
 import com.lucazz82.task.models.UserModel;
 import com.lucazz82.task.repositories.RoleRepository;
+import com.lucazz82.task.repositories.UserRepository;
 import com.lucazz82.task.services.UserService;
 
 @SpringBootApplication
@@ -30,15 +31,17 @@ public class TaskApplication {
 	}
 	
 	@Bean
-	CommandLineRunner run(RoleRepository roleRepository, UserService userService) {
+	CommandLineRunner run(RoleRepository roleRepository, UserService userService, UserRepository userRepository) {
 		return args -> {
 			for(Roles role : Roles.values()) {
 				if(!roleRepository.existsByRole(role))
 					roleRepository.save(new RoleModel(null, role, role.getName(), new ArrayList<UserModel>()));
 			}
 			
-			UserModel admin = new UserModel(null, "admin", "admin", new ArrayList<>(), new ArrayList<>());
-			userService.createAdmin(admin);
+			if(!userRepository.existsByUsername("admin")) {
+				UserModel admin = new UserModel(null, "admin", "admin", new ArrayList<>(), new ArrayList<>());
+				userService.createAdmin(admin);
+			}
 		};
 	}
 }
