@@ -18,6 +18,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.lucazz82.task.handlers.InvalidTokenException;
 import com.lucazz82.task.services.UtilService;
 
 public class CustomAuthorizationFilter extends OncePerRequestFilter {
@@ -34,6 +35,11 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
 
 			// Obtain roles
 			String[] roles = decodedJWT.getClaim("roles").asArray(String.class);
+			
+			if(roles == null) {
+				throw new InvalidTokenException("token with missing roles", 404);
+			}
+			
 			Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
 			Arrays.stream(roles).forEach(role -> authorities.add(new SimpleGrantedAuthority(role)));
 
