@@ -10,6 +10,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -20,6 +21,8 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import com.lucazz82.task.services.UtilService;
 
 public class CustomAuthorizationFilter extends OncePerRequestFilter {
+	@Autowired
+	private UtilService _utilService;
 
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -28,7 +31,7 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
 
 		if (!path.startsWith("/auth")) {
 			String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
-			DecodedJWT decodedJWT = UtilService.getJWTFromHeader(authorizationHeader);
+			DecodedJWT decodedJWT = _utilService.getJWTFromHeader(authorizationHeader);
 			String username = decodedJWT.getSubject(); // Obtain username
 
 			// Obtain roles
