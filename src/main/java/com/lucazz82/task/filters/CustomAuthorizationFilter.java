@@ -21,8 +21,6 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import com.lucazz82.task.services.UtilService;
 
 public class CustomAuthorizationFilter extends OncePerRequestFilter {
-	@Autowired
-	private UtilService _utilService;
 
 	@Override
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
@@ -31,7 +29,7 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
 
 		if (!path.startsWith("/auth")) {
 			String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
-			DecodedJWT decodedJWT = _utilService.getJWTFromHeader(authorizationHeader);
+			DecodedJWT decodedJWT = UtilService.getJWTFromHeader(authorizationHeader);
 			String username = decodedJWT.getSubject(); // Obtain username
 
 			// Obtain roles

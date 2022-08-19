@@ -2,7 +2,6 @@ package com.lucazz82.task.filters;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -11,7 +10,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -20,17 +18,11 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lucazz82.task.services.UtilService;
 
 public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
-
 	private AuthenticationManager authenticationManager;
-	
-	@Autowired
-	private UtilService _utilService;
 
 	public CustomAuthenticationFilter(AuthenticationManager authenticationManager) {
 		super();
@@ -57,9 +49,9 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
 		List<String> authorities = new ArrayList<>();
 		user.getAuthorities().forEach(authority -> authorities.add(authority.getAuthority()));
 		
-		String access_token = _utilService.getAccessToken(user.getUsername(), authorities, request.getRequestURL().toString());
+		String access_token = UtilService.getAccessToken(user.getUsername(), authorities, request.getRequestURL().toString());
 
-		String refresh_token = _utilService.getRefreshToken(user.getUsername(), request.getRequestURL().toString());
+		String refresh_token = UtilService.getRefreshToken(user.getUsername(), request.getRequestURL().toString());
 
 		HashMap<String, String> tokens = new HashMap<>();
 		tokens.put("access_token", access_token);
@@ -79,5 +71,6 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
 		ObjectMapper objectMapper = new ObjectMapper();
 		objectMapper.writeValue(response.getOutputStream(), tokens);
 	}
+
 
 }

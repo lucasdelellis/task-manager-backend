@@ -14,10 +14,10 @@ import com.lucazz82.task.handlers.InvalidTokenException;
 
 @Service
 public class UtilService {
-	private int expireTime = 10 * 60 * 1000;
-	private Algorithm algorithm = Algorithm.HMAC256("secret key".getBytes());
+	private static int expireTime = 10 * 60 * 1000;
+	private static Algorithm algorithm = Algorithm.HMAC256("secret key".getBytes());
 	
-	public DecodedJWT getJWTFromHeader(String authorizationHeader) {
+	public static DecodedJWT getJWTFromHeader(String authorizationHeader) {
 		if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {		
 			throw new InvalidTokenException("bearer token missing", 404);
 		}
@@ -34,15 +34,15 @@ public class UtilService {
 		}
 	}
 	
-	public String getAccessToken(String username, List<String> authorities, String url) {
+	public static String getAccessToken(String username, List<String> authorities, String url) {
 		return JWT.create().withSubject(username)
-		.withExpiresAt(new Date(System.currentTimeMillis() + this.expireTime))
+		.withExpiresAt(new Date(System.currentTimeMillis() + expireTime))
 		.withIssuer(url).withClaim("roles", authorities).sign(algorithm);
 	}
 	
-	public String getRefreshToken(String username, String url) {
+	public static String getRefreshToken(String username, String url) {
 		return JWT.create().withSubject(username)
-				.withExpiresAt(new Date(System.currentTimeMillis() + 3 * this.expireTime))
+				.withExpiresAt(new Date(System.currentTimeMillis() + 3 * expireTime))
 				.withIssuer(url).sign(algorithm);
 	}
 }
