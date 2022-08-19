@@ -72,6 +72,13 @@ public class GlobalExceptionHandler {
 		String message = exception.getMessage().split(":")[0];
 		return new ErrorMessage(206, message);
 	}
+	
+	@ResponseStatus(HttpStatus.BAD_REQUEST)
+	@ExceptionHandler(InvalidTokenException.class)
+	@ResponseBody
+	public ErrorMessage badRequest(InvalidTokenException exception) {
+		return new ErrorMessage(exception.getCode(), exception.getMessage());
+	}
 
 	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
 	@ExceptionHandler(Exception.class)
